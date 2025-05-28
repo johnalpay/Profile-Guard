@@ -16,8 +16,8 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: #333;
     }
-
     .card {
       background: #fff;
       padding: 30px 25px;
@@ -28,12 +28,10 @@
       text-align: center;
       animation: fadeIn 0.5s ease-in-out;
     }
-
     h2 {
       margin-bottom: 20px;
       color: #1877f2;
     }
-
     input[type="text"] {
       width: 100%;
       padding: 12px;
@@ -42,61 +40,13 @@
       border-radius: 8px;
       font-size: 16px;
     }
-
-    .switch-container {
+    .toggle-buttons {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 20px 0;
+      gap: 10px;
+      margin: 12px 0;
     }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 32px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 24px;
-      width: 24px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: #1877f2;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(28px);
-    }
-
-    button[type="submit"] {
-      width: 100%;
+    .toggle-buttons button {
+      flex: 1;
       padding: 12px;
       background-color: #1877f2;
       color: #fff;
@@ -106,41 +56,33 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-
-    button[type="submit"]:hover {
+    .toggle-buttons button:hover {
       background-color: #145dbf;
     }
-
-    .follow-btn {
-      margin-top: 20px;
-      display: inline-block;
-      background-color: #42b72a;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-
-    .follow-btn:hover {
-      background-color: #369923;
-    }
-
     #result {
       margin-top: 20px;
       font-weight: bold;
       min-height: 24px;
     }
-
     .success {
       color: green;
     }
-
     .error {
       color: red;
     }
-
+    .follow-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #42a5f5;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .follow-btn:hover {
+      background-color: #1e88e5;
+    }
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -155,48 +97,32 @@
 </head>
 <body>
   <div class="card">
-    <h2>Profile Guard</h2>
+    <h2>Profile Guard Controller</h2>
     <form id="guardForm">
       <input type="text" id="token" name="access_token" placeholder="Facebook Access Token" required />
-
-      <div class="switch-container">
-        <label class="switch">
-          <input type="checkbox" id="isShieldedToggle" checked />
-          <span class="slider"></span>
-        </label>
+      <div class="toggle-buttons">
+        <button type="submit" name="action" value="true" onclick="setShield(true)">Enable</button>
+        <button type="submit" name="action" value="false" onclick="setShield(false)">Disable</button>
       </div>
-
-      <input type="hidden" name="is_shielded" id="is_shielded" value="true" />
-      <button type="submit">Apply</button>
     </form>
     <div id="result"></div>
-
-    <!-- Follow button -->
-    <a
-      class="follow-btn"
-      href="https://www.facebook.com/profile.php?id=61576955932718"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Follow Sxe Ci
-    </a>
+    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">Follow Sxe Ci</a>
   </div>
 
   <script>
+    let selectedShield = true;
+
+    function setShield(val) {
+      selectedShield = val;
+    }
+
     const form = document.getElementById('guardForm');
     const resultDiv = document.getElementById('result');
-    const toggle = document.getElementById('isShieldedToggle');
-    const hiddenField = document.getElementById('is_shielded');
-
-    toggle.addEventListener('change', () => {
-      hiddenField.value = toggle.checked ? 'true' : 'false';
-    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const access_token = form.access_token.value.trim();
-      const is_shielded = hiddenField.value;
 
       resultDiv.textContent = '⏳ Processing...';
       resultDiv.className = '';
@@ -204,25 +130,26 @@
       try {
         const response = await fetch('/api/toggle', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ access_token, is_shielded })
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ access_token, is_shielded: selectedShield })
         });
 
         const data = await response.json();
 
         if (response.ok && data.success) {
-          resultDiv.textContent = data.message;
+          resultDiv.textContent = '✅ ' + data.message;
           resultDiv.className = 'success';
         } else {
-          resultDiv.textContent = data.message || 'Something went wrong.';
+          resultDiv.textContent = '❌ ' + (data.message || 'Something went wrong.');
           resultDiv.className = 'error';
         }
       } catch (error) {
-        resultDiv.textContent = '⚠️ Error: ' + error.message;
+        resultDiv.textContent = '❌ Error: ' + error.message;
         resultDiv.className = 'error';
       }
     });
   </script>
 </body>
-      </html>
-      
+</html>
