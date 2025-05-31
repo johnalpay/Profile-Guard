@@ -5,174 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Facebook Profile Guard</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(-45deg, #1877f2, #42a5f5, #1e88e5, #0d47a1);
-      background-size: 400% 400%;
-      animation: gradientMove 15s ease infinite;
-      height: 100vh;
+      background: linear-gradient(to right, #1877f2, #42a5f5);
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
+      height: 100vh;
+      color: #333;
     }
-
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 20px;
-      padding: 40px 30px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      max-width: 400px;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       width: 100%;
+      max-width: 400px;
       text-align: center;
-      animation: fadeIn 0.8s ease-in-out;
-      border: 2px solid rgba(255,255,255,0.1);
-      position: relative;
-      overflow: hidden;
+      animation: fadeIn 0.5s ease-in-out;
     }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: calc(100% + 4px);
-      height: calc(100% + 4px);
-      background: linear-gradient(45deg, #42a5f5, #00e5ff, #42a5f5, #1e88e5);
-      z-index: -1;
-      background-size: 400% 400%;
-      animation: glow 6s ease infinite;
-      filter: blur(10px);
-      opacity: 0.6;
-    }
-
-    @keyframes glow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     h2 {
       margin-bottom: 20px;
-      color: #fff;
-      font-weight: 600;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      color: #1877f2;
     }
-
     input[type="text"] {
       width: 100%;
-      padding: 14px;
-      margin: 15px 0;
-      border: none;
-      border-radius: 10px;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 16px;
-      outline: none;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      transition: 0.3s ease;
     }
-
-    input[type="text"]:focus {
-      background: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 5px rgba(255,255,255,0.5);
-    }
-
     .toggle-buttons {
       display: flex;
       gap: 10px;
-      margin: 18px 0;
+      margin: 12px 0;
     }
-
     .toggle-buttons button {
       flex: 1;
       padding: 12px;
-      font-size: 16px;
+      background-color: #1877f2;
+      color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
-      color: white;
-      background: #1877f2;
-      transition: transform 0.3s ease, background-color 0.3s ease;
+      transition: background-color 0.3s, transform 0.2s;
     }
-
     .toggle-buttons button:hover {
-      background-color: #0d47a1;
+      background-color: #145dbf;
       transform: scale(1.05);
     }
-
-    .toggle-buttons button:active {
-      transform: scale(0.97);
-    }
-
     #result {
       margin-top: 20px;
       font-weight: bold;
       min-height: 24px;
     }
-
-    .success {
-      color: #00e676;
-    }
-
-    .error {
-      color: #ff5252;
-    }
+    .success { color: green; }
+    .error { color: red; }
 
     .follow-btn {
       display: inline-block;
-      margin-top: 30px;
-      padding: 12px 25px;
-      background: linear-gradient(to right, #42a5f5, #1e88e5);
-      border-radius: 30px;
-      color: #fff;
-      font-weight: bold;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #42a5f5;
+      color: white;
+      border-radius: 6px;
       text-decoration: none;
-      transition: transform 0.3s ease, background 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: background-color 0.3s;
     }
-
     .follow-btn:hover {
-      transform: scale(1.07);
-      background: linear-gradient(to right, #1e88e5, #1565c0);
+      background-color: #1e88e5;
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #1877f2;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+      margin-top: 10px;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>🛡️ Profile Guard Controller</h2>
+    <h2>Profile Guard Controller</h2>
     <form id="guardForm">
-      <input type="text" id="token" name="access_token" placeholder="Enter Facebook Access Token" required />
+      <input type="text" id="token" name="access_token" placeholder="Facebook Access Token" required />
       <div class="toggle-buttons">
-        <button type="submit" name="action" value="true" onclick="setShield(true)">🟢 Enable</button>
-        <button type="submit" name="action" value="false" onclick="setShield(false)">🔴 Disable</button>
+        <button type="submit" name="action" value="true" onclick="setShield(true)">Enable</button>
+        <button type="submit" name="action" value="false" onclick="setShield(false)">Disable</button>
       </div>
     </form>
+    <div class="spinner" id="spinner"></div>
     <div id="result"></div>
-    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">💙 Follow Sxe Ci</a>
+    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">Follow Sxe Ci</a>
+
+    <!-- 🔊 Audio effects -->
+    <audio id="sound-success" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_f9ce1f4b40.mp3?filename=success-1-6297.mp3"></audio>
+    <audio id="sound-error" src="https://cdn.pixabay.com/download/audio/2021/09/01/audio_c0a0d31a6f.mp3?filename=error-2-126505.mp3"></audio>
+    <audio id="sound-click" src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_5d65212cbf.mp3?filename=button-click-124467.mp3"></audio>
   </div>
 
   <script>
@@ -180,25 +128,29 @@
 
     function setShield(val) {
       selectedShield = val;
+      document.getElementById('sound-click').play();
     }
 
     const form = document.getElementById('guardForm');
     const resultDiv = document.getElementById('result');
+    const spinner = document.getElementById('spinner');
+
+    const successSound = document.getElementById('sound-success');
+    const errorSound = document.getElementById('sound-error');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const access_token = form.access_token.value.trim();
 
-      resultDiv.textContent = '⏳ Processing...';
+      resultDiv.textContent = '';
       resultDiv.className = '';
+      spinner.style.display = 'block';
 
       try {
         const response = await fetch('/api/toggle', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ access_token, is_shielded: selectedShield })
         });
 
@@ -207,13 +159,18 @@
         if (response.ok && data.success) {
           resultDiv.textContent = '✅ ' + data.message;
           resultDiv.className = 'success';
+          successSound.play();
         } else {
           resultDiv.textContent = '❌ ' + (data.message || 'Something went wrong.');
           resultDiv.className = 'error';
+          errorSound.play();
         }
       } catch (error) {
         resultDiv.textContent = '❌ Error: ' + error.message;
         resultDiv.className = 'error';
+        errorSound.play();
+      } finally {
+        spinner.style.display = 'none';
       }
     });
   </script>
