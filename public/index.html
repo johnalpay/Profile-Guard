@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Facebook Profile Guard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     * {
       box-sizing: border-box;
@@ -70,6 +71,11 @@
       color: #fff;
       font-weight: 600;
       text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     input[type="text"] {
@@ -106,6 +112,7 @@
       color: white;
       background: #1877f2;
       transition: transform 0.3s ease, background-color 0.3s ease;
+      will-change: transform;
     }
 
     .toggle-buttons button:hover {
@@ -132,7 +139,10 @@
     }
 
     .follow-btn {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       margin-top: 30px;
       padding: 12px 25px;
       background: linear-gradient(to right, #42a5f5, #1e88e5);
@@ -142,11 +152,28 @@
       text-decoration: none;
       transition: transform 0.3s ease, background 0.3s ease;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      will-change: transform;
     }
 
     .follow-btn:hover {
       transform: scale(1.07);
       background: linear-gradient(to right, #1e88e5, #1565c0);
+    }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top: 3px solid #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     @keyframes fadeIn {
@@ -159,32 +186,11 @@
         transform: scale(1);
       }
     }
-
-    /* 🔄 SPINNER */
-    #loader {
-      display: none;
-      margin: 15px auto;
-    }
-
-    .loader {
-      border: 6px solid rgba(255, 255, 255, 0.2);
-      border-top: 6px solid #00e5ff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>🛡️ Profile Guard Controller</h2>
+    <h2><i class="fas fa-shield-alt"></i> Profile Guard</h2>
     <form id="guardForm">
       <input type="text" id="token" name="access_token" placeholder="Enter Facebook Access Token" required />
       <div class="toggle-buttons">
@@ -192,13 +198,10 @@
         <button type="submit" name="action" value="false" onclick="setShield(false)">🔴 Disable</button>
       </div>
     </form>
-
-    <!-- 🔄 LOADER -->
-    <div id="loader"><div class="loader"></div></div>
-
     <div id="result"></div>
-
-    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">💙 Follow Sxe Ci</a>
+    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">
+      <i class="fab fa-facebook-square"></i> Follow Sxe Ci
+    </a>
   </div>
 
   <script>
@@ -210,16 +213,14 @@
 
     const form = document.getElementById('guardForm');
     const resultDiv = document.getElementById('result');
-    const loader = document.getElementById('loader');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const access_token = form.access_token.value.trim();
 
-      resultDiv.textContent = '';
+      resultDiv.innerHTML = '<span class="spinner"></span> <span>Processing...</span>';
       resultDiv.className = '';
-      loader.style.display = 'block';
 
       try {
         const response = await fetch('/api/toggle', {
@@ -231,7 +232,6 @@
         });
 
         const data = await response.json();
-        loader.style.display = 'none';
 
         if (response.ok && data.success) {
           resultDiv.textContent = '✅ ' + data.message;
@@ -241,7 +241,6 @@
           resultDiv.className = 'error';
         }
       } catch (error) {
-        loader.style.display = 'none';
         resultDiv.textContent = '❌ Error: ' + error.message;
         resultDiv.className = 'error';
       }
