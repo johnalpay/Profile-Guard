@@ -8,82 +8,147 @@
     * {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #1877f2, #42a5f5);
+      background: linear-gradient(-45deg, #1877f2, #42a5f5, #1e88e5, #0d47a1);
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      color: #333;
+      color: #fff;
     }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .card {
-      background: #fff;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       max-width: 400px;
+      width: 100%;
       text-align: center;
-      animation: fadeIn 0.5s ease-in-out;
+      animation: fadeIn 0.8s ease-in-out;
+      border: 2px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
     }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      background: linear-gradient(45deg, #42a5f5, #00e5ff, #42a5f5, #1e88e5);
+      z-index: -1;
+      background-size: 400% 400%;
+      animation: glow 6s ease infinite;
+      filter: blur(10px);
+      opacity: 0.6;
+    }
+
+    @keyframes glow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     h2 {
       margin-bottom: 20px;
-      color: #1877f2;
+      color: #fff;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
+
     input[type="text"] {
       width: 100%;
-      padding: 12px;
-      margin: 12px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      padding: 14px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 10px;
       font-size: 16px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      transition: 0.3s ease;
     }
+
+    input[type="text"]:focus {
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 5px rgba(255,255,255,0.5);
+    }
+
     .toggle-buttons {
       display: flex;
       gap: 10px;
-      margin: 12px 0;
+      margin: 18px 0;
     }
+
     .toggle-buttons button {
       flex: 1;
       padding: 12px;
-      background-color: #1877f2;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
       font-size: 16px;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
+      color: white;
+      background: #1877f2;
+      transition: transform 0.3s ease, background-color 0.3s ease;
     }
+
     .toggle-buttons button:hover {
-      background-color: #145dbf;
+      background-color: #0d47a1;
       transform: scale(1.05);
     }
+
+    .toggle-buttons button:active {
+      transform: scale(0.97);
+    }
+
     #result {
       margin-top: 20px;
       font-weight: bold;
       min-height: 24px;
     }
+
     .success {
-      color: green;
+      color: #00e676;
     }
+
     .error {
-      color: red;
+      color: #ff5252;
     }
+
     .follow-btn {
       display: inline-block;
-      margin-top: 25px;
-      padding: 10px 20px;
-      background-color: #42a5f5;
-      color: white;
-      border-radius: 6px;
+      margin-top: 30px;
+      padding: 12px 25px;
+      background: linear-gradient(to right, #42a5f5, #1e88e5);
+      border-radius: 30px;
+      color: #fff;
+      font-weight: bold;
       text-decoration: none;
-      transition: background-color 0.3s;
+      transition: transform 0.3s ease, background 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
+
     .follow-btn:hover {
-      background-color: #1e88e5;
+      transform: scale(1.07);
+      background: linear-gradient(to right, #1e88e5, #1565c0);
     }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -95,17 +160,20 @@
       }
     }
 
-    /* 🔄 Loading Spinner */
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #1877f2;
+    /* 🔄 SPINNER */
+    #loader {
+      display: none;
+      margin: 15px auto;
+    }
+
+    .loader {
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #00e5ff;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
+      width: 40px;
+      height: 40px;
       animation: spin 1s linear infinite;
       margin: 0 auto;
-      margin-top: 10px;
-      display: none;
     }
 
     @keyframes spin {
@@ -116,17 +184,21 @@
 </head>
 <body>
   <div class="card">
-    <h2>Profile Guard Controller</h2>
+    <h2>🛡️ Profile Guard Controller</h2>
     <form id="guardForm">
-      <input type="text" id="token" name="access_token" placeholder="Facebook Access Token" required />
+      <input type="text" id="token" name="access_token" placeholder="Enter Facebook Access Token" required />
       <div class="toggle-buttons">
-        <button type="submit" name="action" value="true" onclick="setShield(true)">Enable</button>
-        <button type="submit" name="action" value="false" onclick="setShield(false)">Disable</button>
+        <button type="submit" name="action" value="true" onclick="setShield(true)">🟢 Enable</button>
+        <button type="submit" name="action" value="false" onclick="setShield(false)">🔴 Disable</button>
       </div>
     </form>
-    <div class="spinner" id="spinner"></div>
+
+    <!-- 🔄 LOADER -->
+    <div id="loader"><div class="loader"></div></div>
+
     <div id="result"></div>
-    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">Follow Sxe Ci</a>
+
+    <a class="follow-btn" href="https://www.facebook.com/profile.php?id=61576955932718" target="_blank">💙 Follow Sxe Ci</a>
   </div>
 
   <script>
@@ -138,7 +210,7 @@
 
     const form = document.getElementById('guardForm');
     const resultDiv = document.getElementById('result');
-    const spinner = document.getElementById('spinner');
+    const loader = document.getElementById('loader');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -147,7 +219,7 @@
 
       resultDiv.textContent = '';
       resultDiv.className = '';
-      spinner.style.display = 'block'; // Show spinner
+      loader.style.display = 'block';
 
       try {
         const response = await fetch('/api/toggle', {
@@ -159,6 +231,7 @@
         });
 
         const data = await response.json();
+        loader.style.display = 'none';
 
         if (response.ok && data.success) {
           resultDiv.textContent = '✅ ' + data.message;
@@ -168,10 +241,9 @@
           resultDiv.className = 'error';
         }
       } catch (error) {
+        loader.style.display = 'none';
         resultDiv.textContent = '❌ Error: ' + error.message;
         resultDiv.className = 'error';
-      } finally {
-        spinner.style.display = 'none'; // Hide spinner
       }
     });
   </script>
